@@ -79,6 +79,8 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
                 src={ASSETS.precisionCallout}
                 alt="Excavation site work"
                 className="w-full h-full object-cover"
+                loading="lazy"
+                decoding="async"
                 referrerPolicy="no-referrer"
               />
             </div>
@@ -91,6 +93,8 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
                 src={ASSETS.retainingWalls}
                 alt="Retaining wall construction"
                 className="w-full h-full object-cover"
+                loading="lazy"
+                decoding="async"
                 referrerPolicy="no-referrer"
               />
             </div>
@@ -177,6 +181,8 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
                 src={ASSETS.waterSewer}
                 alt="Utility trenching installation"
                 className="w-full h-full object-cover"
+                loading="lazy"
+                decoding="async"
                 referrerPolicy="no-referrer"
               />
             </div>
@@ -189,6 +195,8 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
                 src={ASSETS.waterproofing}
                 alt="Foundation waterproofing and weeping tile installation"
                 className="w-full h-full object-cover"
+                loading="lazy"
+                decoding="async"
                 referrerPolicy="no-referrer"
               />
             </div>

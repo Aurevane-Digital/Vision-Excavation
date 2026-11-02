@@ -25,6 +25,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
     message: ''
   });
   const [homeFormSuccess, setHomeFormSuccess] = useState(false);
+  const videoRef = React.useRef<HTMLVideoElement>(null);
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,40 +37,116 @@ export const HomeView: React.FC<HomeViewProps> = ({
     }, 4000);
   };
 
+  React.useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+
+    let isDisposed = false;
+
+    // Stagger video start by 120ms to allow browser to complete initial paint smoothly
+    const startTimer = setTimeout(() => {
+      if (!isDisposed && video.paused) {
+        video.play().catch(() => {});
+      }
+    }, 120);
+
+    // Efficient IntersectionObserver: Pause video when scrolled out of view to save 100% GPU
+    let observer: IntersectionObserver | null = null;
+    if ('IntersectionObserver' in window) {
+      observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              if (video.paused && !document.hidden) {
+                video.play().catch(() => {});
+              }
+            } else {
+              if (!video.paused) {
+                video.pause();
+              }
+            }
+          });
+        },
+        { threshold: 0.05 }
+      );
+      observer.observe(video);
+    }
+
+    const handleVisibility = () => {
+      if (document.hidden) {
+        video.pause();
+      } else if (observer && !video.paused) {
+        video.play().catch(() => {});
+      }
+    };
+
+    const handleEnded = () => {
+      video.currentTime = 0;
+      video.play().catch(() => {});
+    };
+
+    const handleUserInteraction = () => {
+      if (video.paused) {
+        video.play().catch(() => {});
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibility);
+    video.addEventListener('ended', handleEnded);
+    window.addEventListener('touchstart', handleUserInteraction, { passive: true, once: true });
+
+    return () => {
+      isDisposed = true;
+      clearTimeout(startTimer);
+      document.removeEventListener('visibilitychange', handleVisibility);
+      video.removeEventListener('ended', handleEnded);
+      window.removeEventListener('touchstart', handleUserInteraction);
+      if (observer) observer.disconnect();
+    };
+  }, []);
+
   const featuredProjects = PROJECTS.slice(0, 4);
 
   return (
-    <div className="page-view animate-in fade-in duration-300">
+    <div className="page-view">
       {/* Hero Section */}
       <section
         id="home"
         className="relative bg-zinc-950 text-white min-h-[520px] sm:min-h-[640px] lg:min-h-[740px] flex items-center justify-center text-center overflow-hidden"
       >
         <div className="absolute inset-0 z-0 overflow-hidden">
-          {/* Static fallback image for reduced-motion and pre-load state */}
+          {/* High-res background image always underneath so there are never blank frames */}
           <img
             alt="Heavy excavators performing earthwork"
-            className="w-full h-full object-cover opacity-80 hidden motion-reduce:block pointer-events-none"
+            className="absolute inset-0 w-full h-full object-cover opacity-90 pointer-events-none"
             src={ASSETS.heroBg}
+            loading="eager"
+            fetchPriority="high"
+            decoding="async"
             referrerPolicy="no-referrer"
           />
-          {/* Full-width cinematic background video with high clarity */}
+          {/* Full-width cinematic background video with hardware acceleration and no CSS filter overhead */}
           <video
+            ref={videoRef}
             autoPlay
             loop
             muted
             playsInline
             preload="metadata"
             poster={ASSETS.heroBg}
-            className="w-full h-full object-cover opacity-90 contrast-105 motion-reduce:hidden pointer-events-none"
+            className="absolute inset-0 w-full h-full object-cover opacity-90 motion-reduce:hidden pointer-events-none"
           >
             <source src={ASSETS.heroVideo} type="video/mp4" />
           </video>
-          {/* Gentle, light scrim only at bottom edge to transition cleanly */}
+          {/* Light gradient scrim for optimal text contrast without masking the action */}
           <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/80 via-black/15 to-black/25 pointer-events-none"></div>
         </div>
 
-        <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 py-14 sm:py-20 lg:py-24 flex flex-col items-center drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)]">
+        <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 py-14 sm:py-20 lg:py-24 flex flex-col items-center">
           <div className="mb-3 sm:mb-4 inline-flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-full border border-zinc-700 bg-zinc-900/80 backdrop-blur">
             <svg
               className="w-6 h-6 sm:w-7 sm:h-7 text-white"
@@ -86,10 +163,10 @@ export const HomeView: React.FC<HomeViewProps> = ({
             </svg>
           </div>
 
-          <h1 className="text-3xl sm:text-6xl lg:text-7xl font-extrabold font-heading tracking-tight mb-2 sm:mb-3">
+          <h1 className="text-3xl sm:text-6xl lg:text-7xl font-extrabold font-heading tracking-tight mb-2 sm:mb-3 [text-shadow:_0_2px_12px_rgb(0_0_0_/_90%)]">
             VISION EXCAVATION
           </h1>
-          <p className="text-xs sm:text-lg uppercase tracking-[0.2em] sm:tracking-[0.3em] font-semibold text-zinc-300 mb-6 sm:mb-8 max-w-xl font-heading">
+          <p className="text-xs sm:text-lg uppercase tracking-[0.2em] sm:tracking-[0.3em] font-semibold text-zinc-200 mb-6 sm:mb-8 max-w-xl font-heading [text-shadow:_0_2px_8px_rgb(0_0_0_/_90%)]">
             Residential &amp; Commercial Earthworks
           </p>
 
@@ -123,6 +200,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
       {/* Highlight Ticker Bar */}
       <section
         aria-label="Key highlights"
+        style={{ contain: 'paint', transform: 'translate3d(0, 0, 0)' }}
         className="bg-zinc-100 border-y border-zinc-200 py-3.5 overflow-hidden relative select-none group"
       >
         <div className="animate-marquee items-center">
@@ -144,6 +222,8 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 src={ASSETS.bbbBadge}
                 alt="BBB Accredited Business"
                 className="h-8 w-auto object-contain"
+                loading="lazy"
+                decoding="async"
                 referrerPolicy="no-referrer"
               />
               <span className="text-zinc-900 font-bold text-xs">A+ Accredited</span>
@@ -170,6 +250,8 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 src={ASSETS.bbbBadge}
                 alt="BBB Accredited Business"
                 className="h-8 w-auto object-contain"
+                loading="lazy"
+                decoding="async"
                 referrerPolicy="no-referrer"
               />
               <span className="text-zinc-900 font-bold text-xs">A+ Accredited</span>
@@ -202,6 +284,8 @@ export const HomeView: React.FC<HomeViewProps> = ({
                     alt={service.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     src={service.image}
+                    loading="lazy"
+                    decoding="async"
                     referrerPolicy="no-referrer"
                   />
                   <div className="absolute top-2 right-2 bg-zinc-950/80 text-zinc-300 text-[10px] uppercase font-mono px-2 py-0.5">
@@ -238,6 +322,8 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 alt="Vision Excavation heavy machinery and site development"
                 className="w-full h-full object-cover"
                 src={ASSETS.precisionCallout}
+                loading="lazy"
+                decoding="async"
                 referrerPolicy="no-referrer"
               />
             </div>
@@ -363,6 +449,8 @@ export const HomeView: React.FC<HomeViewProps> = ({
                     alt={project.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     src={project.image}
+                    loading="lazy"
+                    decoding="async"
                     referrerPolicy="no-referrer"
                   />
                   <div className="absolute top-3 right-3 bg-zinc-950/85 text-white text-[10px] font-mono font-bold uppercase tracking-widest px-2.5 py-1">
@@ -473,6 +561,8 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 alt="Excavator grading rocky terrain"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 src={ASSETS.action1}
+                loading="lazy"
+                decoding="async"
                 referrerPolicy="no-referrer"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 flex flex-col justify-end p-6 text-left">
@@ -490,6 +580,8 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 alt="Vision Excavation crew positioning armor stone"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 src={ASSETS.action2}
+                loading="lazy"
+                decoding="async"
                 referrerPolicy="no-referrer"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 flex flex-col justify-end p-6 text-left">

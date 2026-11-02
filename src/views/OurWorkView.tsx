@@ -83,6 +83,8 @@ export const OurWorkView: React.FC<OurWorkViewProps> = ({
                     alt={project.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     src={project.image}
+                    loading="lazy"
+                    decoding="async"
                     referrerPolicy="no-referrer"
                   />
                   <div className="absolute top-3 right-3 bg-zinc-950/80 text-white text-[10px] font-mono font-bold uppercase tracking-widest px-2.5 py-1">
@@ -204,6 +206,8 @@ export const OurWorkView: React.FC<OurWorkViewProps> = ({
                 alt="Vision Excavation fleet on site"
                 className="w-full h-full object-cover"
                 src={ASSETS.precisionCallout}
+                loading="lazy"
+                decoding="async"
                 referrerPolicy="no-referrer"
               />
             </div>
