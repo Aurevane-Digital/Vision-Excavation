@@ -15,6 +15,18 @@ export const MainHeader: React.FC<MainHeaderProps> = ({
   onRequestQuote
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  React.useEffect(() => {
+    const handleScroll = () => {
+      const scrolled = window.scrollY > 20;
+      setIsScrolled((prev) => (prev !== scrolled ? scrolled : prev));
+    };
+
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const navItems: { label: string; view: PageView }[] = [
     { label: 'Home', view: 'home' },
@@ -31,7 +43,15 @@ export const MainHeader: React.FC<MainHeaderProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-zinc-200">
+    <header
+      className={`sticky top-0 z-50 transition-all duration-300 -mb-16 sm:-mb-20 ${
+        isScrolled
+          ? 'bg-white/95 backdrop-blur-md border-b border-zinc-200 shadow-sm'
+          : mobileMenuOpen
+          ? 'bg-zinc-950 border-b border-zinc-800'
+          : 'bg-transparent border-b border-white/10'
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 sm:h-20">
           {/* Brand Zone */}
@@ -45,7 +65,11 @@ export const MainHeader: React.FC<MainHeaderProps> = ({
               <img
                 src={ASSETS.logo}
                 alt="Vision Excavation"
-                className="h-8 sm:h-11 max-h-12 w-auto object-contain hover:opacity-90 transition-opacity"
+                className={`h-8 sm:h-11 max-h-12 w-auto object-contain hover:opacity-90 transition-all duration-300 ${
+                  !isScrolled && !mobileMenuOpen
+                    ? 'drop-shadow-[0_0_8px_rgba(255,255,255,0.7)] drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] filter'
+                    : ''
+                }`}
                 referrerPolicy="no-referrer"
               />
             </div>
@@ -63,7 +87,9 @@ export const MainHeader: React.FC<MainHeaderProps> = ({
                   className={`text-sm font-semibold tracking-wide uppercase transition-colors whitespace-nowrap cursor-pointer pb-1 border-b-2 ${
                     isActive
                       ? 'text-brand-red border-brand-red'
-                      : 'text-zinc-800 hover:text-brand-red border-transparent'
+                      : isScrolled
+                      ? 'text-zinc-800 hover:text-brand-red border-transparent'
+                      : 'text-zinc-100 hover:text-brand-red border-transparent drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]'
                   }`}
                 >
                   {item.label}
@@ -88,9 +114,13 @@ export const MainHeader: React.FC<MainHeaderProps> = ({
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-expanded={mobileMenuOpen}
               aria-label="Toggle Mobile Menu"
-              className="lg:hidden p-2.5 -mr-2 text-zinc-800 hover:text-brand-red focus:outline-none min-h-[48px] min-w-[48px] flex items-center justify-center rounded cursor-pointer"
+              className={`lg:hidden p-2.5 -mr-2 focus:outline-none min-h-[48px] min-w-[48px] flex items-center justify-center rounded cursor-pointer transition-colors ${
+                isScrolled && !mobileMenuOpen
+                  ? 'text-zinc-800 hover:text-brand-red'
+                  : 'text-white hover:text-brand-red'
+              }`}
             >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {mobileMenuOpen ? <X className="w-6 h-6 text-white" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
         </div>

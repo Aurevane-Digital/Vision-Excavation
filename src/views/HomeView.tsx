@@ -146,7 +146,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
           <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/80 via-black/15 to-black/25 pointer-events-none"></div>
         </div>
 
-        <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 py-14 sm:py-20 lg:py-24 flex flex-col items-center">
+        <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 pt-24 sm:pt-32 lg:pt-36 pb-14 sm:pb-20 lg:pb-24 flex flex-col items-center">
           <div className="mb-3 sm:mb-4 inline-flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-full border border-zinc-700 bg-zinc-900/80 backdrop-blur">
             <svg
               className="w-6 h-6 sm:w-7 sm:h-7 text-white"

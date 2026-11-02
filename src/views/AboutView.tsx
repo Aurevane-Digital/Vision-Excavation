@@ -11,7 +11,7 @@ export const AboutView: React.FC<AboutViewProps> = ({ onNavigate, onRequestQuote
   return (
     <div className="page-view animate-in fade-in duration-300">
       {/* Banner */}
-      <div className="bg-zinc-950 text-white py-20 text-center border-b border-zinc-800">
+      <div className="bg-zinc-950 text-white pt-28 sm:pt-32 pb-20 text-center border-b border-zinc-800">
         <div className="max-w-4xl mx-auto px-4">
           <h1 className="text-4xl sm:text-6xl font-extrabold font-heading tracking-tight mb-4">
             ABOUT VISION EXCAVATION
