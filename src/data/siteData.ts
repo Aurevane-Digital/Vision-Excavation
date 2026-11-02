@@ -1,25 +1,25 @@
 import { ServiceItem, ProjectItem, CoverageTown, ReviewItem } from '../types';
 
 export const ASSETS = {
-  logo: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDkvxa8yaJCx6qEdrbNPdro8e1IcWTzwn22atCFMj2Td1h3XQVUNWGzxfPKhueMc3Q6v85nbh04I42YBnbG5JTvKVTEKI-9vzT7aMGZQiTe86n3IiHJV7mbRNQgSAE2FQV1lYfWLHVxDJm0E85UbdB4jeap1qeHk6gUCA9i9r8v2G1PgQYN_wibUVmF_shOC03GHwdT-EGoMc4HIpA9XehpObS-deacLOhcd4E0qLi7A0a_SSp2c7p-',
-  footerLogo: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDPNiL2lfYFM3EWvxa1OracV43BVKAA_xSPwtsNyv_PGHdCXw4aao49pwmkHB_SmlJE2bHXb1C9mAeRGJFNOaY3if9tB1AjDJW3FuAEfPdg73BKl6LQX3O1xeJL1bgdthr1B3kRsd0IzDBDBKisvU3dch78R91x4HrRO0XA6QpQMmc5UWqnDVfuhc1dQLcuqMFxxt61s9_0akeZwSAo7OjctY5IdvNJjSnf12KqIkxyEeRwnfkNAX9M',
-  bbbBadge: 'https://lh3.googleusercontent.com/aida/AEtjO1UbUaKsuJ6Tg9OHTcf17UZWFPeMAKV7uXR-eLasZNjPis0whAD6mhWhSMJrtI11YeWNcxn1EBkdXdxDUXgQp0zqX1OfMsiuj7u2IDhM6cld1z-foJBywl78Q0gKvnRq8LjqEq5MhizbL9RhYELpuQ3P8JKZn9kVVE8YBT3nnzlb_6dBIGnXWlHLAxPsX0q0KE32431Qww0E1Uu9Zn-lMihglFYqHaut2FK61aPff_AT',
-  bbbBadgeAlt: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBwB13kBbT5WHK_MNT_SeTDFm7C7r0bRNOYfpXeyyCAAjy6FxfA6s1F-wRDHXmuJNCYBoj6s950LmGPnDdqPgtPxsiJBqgfbb4Gf-rQQCffdrMaiOxbZmk5VrILoq7xpqKh8juOGCq7uwfbeeWb8fUhfH3z7xfDhpeMTfCZ5_l5PvRkn31qcoRc9aeUjqphv0dfZeyPT7xL4zZjSZamlclsnUx-6vdQLJAeTHMcnRg',
-  heroBg: '/src/assets/images/hero_excavator_site_1793633309300.jpg',
+  logo: '/assets/images/logo.png',
+  footerLogo: '/assets/images/footer_logo.png',
+  bbbBadge: '/assets/images/bbb_badge.png',
+  bbbBadgeAlt: '/assets/images/bbb_badge_alt.png',
+  heroBg: '/assets/images/hero_excavator_site_1793633309300.jpg',
   heroVideo: '/assets/aistudio/hero-video_379d1614.mp4',
-  excavation: '/src/assets/images/excavation_foundation_prep_1793633308598.jpg',
-  retainingWalls: '/src/assets/images/armor_stone_retaining_wall_1793633310516.jpg',
-  waterSewer: '/src/assets/images/utility_sewer_trench_1793633310559.jpg',
-  septic: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAcFYHPyiICdNGKJ7JXBWiGoXWP-JaIIyiQ8mexDPSXggZ2Gp6WQz_1I0udnk3GB1srk1dSw57kfAR61kR9CdAiRAN3H0kEcoGFX8gDs4hW-ou_cD8oknwp1_72q1xg9fgCyO95715cmNDyK9w1mhi_WPKKQ0dNPv8xVNzlDcI3L5QovfDzxJHc6Sch3XTohnYxpLG9fqOVX1Xzg83tvAKmEO65TpD2BJZKwh0Bkx0',
-  concrete: '/src/assets/images/foundation_waterproofing_1793633310257.jpg',
-  waterproofing: '/src/assets/images/foundation_waterproofing_1793633310257.jpg',
-  precisionCallout: '/src/assets/images/excavation_foundation_prep_1793633308598.jpg',
-  projectBasement: '/src/assets/images/excavation_foundation_prep_1793633308598.jpg',
-  projectRetainingWall: '/src/assets/images/armor_stone_retaining_wall_1793633310516.jpg',
-  projectWaterMain: '/src/assets/images/utility_sewer_trench_1793633310559.jpg',
-  projectSeptic: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCiXAN_BiaaPiLyurtt9WtHa7Y7oXFPfPPfrpvI-ihgD_rM_NANq6mRQyctQu-GrcdlgQLGUTCaaE6pffRAnJVuVdZe65GU-HsoUxErQcbP8P7L0dzf8HRY-bbk2dA3c9----vLNaFV7ZKO_NeSo6ksrbpoOzl781wGqYn9kD2wxLW1YrE1uOOicegl81JB2KFivzUgF0lMFzEO7KJZxTB9QYnWdAVKCHUJcDor5_k',
-  action1: '/src/assets/images/excavation_foundation_prep_1793633308598.jpg',
-  action2: '/src/assets/images/armor_stone_retaining_wall_1793633310516.jpg'
+  excavation: '/assets/images/excavation_foundation_prep_1793633308598.jpg',
+  retainingWalls: '/assets/images/armor_stone_retaining_wall_1793633310516.jpg',
+  waterSewer: '/assets/images/utility_sewer_trench_1793633310559.jpg',
+  septic: '/assets/images/septic_system.jpg',
+  concrete: '/assets/images/foundation_waterproofing_1793633310257.jpg',
+  waterproofing: '/assets/images/foundation_waterproofing_1793633310257.jpg',
+  precisionCallout: '/assets/images/excavation_foundation_prep_1793633308598.jpg',
+  projectBasement: '/assets/images/excavation_foundation_prep_1793633308598.jpg',
+  projectRetainingWall: '/assets/images/armor_stone_retaining_wall_1793633310516.jpg',
+  projectWaterMain: '/assets/images/utility_sewer_trench_1793633310559.jpg',
+  projectSeptic: '/assets/images/septic_system.jpg',
+  action1: '/assets/images/excavation_foundation_prep_1793633308598.jpg',
+  action2: '/assets/images/armor_stone_retaining_wall_1793633310516.jpg'
 };
 
 export const CONTACT_INFO = {
