@@ -9,6 +9,7 @@ export default defineConfig(() => {
     resolve: {
       alias: {
         '@': path.resolve(import.meta.dirname || process.cwd(), '.'),
+        '@vercel/speed-insights/next': '@vercel/speed-insights/react',
       },
     },
     server: {

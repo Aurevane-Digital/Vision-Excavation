@@ -10,6 +10,7 @@ import { AboutView } from './views/AboutView';
 import { ServicesView } from './views/ServicesView';
 import { OurWorkView } from './views/OurWorkView';
 import { ContactView } from './views/ContactView';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 export default function App() {
   const [currentView, setCurrentView] = useState<PageView>('home');
@@ -119,6 +120,9 @@ export default function App() {
           handleOpenQuoteModal(serviceCategory);
         }}
       />
+
+      {/* Vercel Speed Insights */}
+      <SpeedInsights />
     </div>
   );
 }
