@@ -25,6 +25,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
     message: ''
   });
   const [homeFormSuccess, setHomeFormSuccess] = useState(false);
+  const [videoMounted, setVideoMounted] = useState(false);
   const videoRef = React.useRef<HTMLVideoElement>(null);
 
   const handleFormSubmit = (e: React.FormEvent) => {
@@ -38,6 +39,16 @@ export const HomeView: React.FC<HomeViewProps> = ({
   };
 
   React.useEffect(() => {
+    // Mount video shortly after initial DOM and LCP paint to achieve 90+ mobile Lighthouse score
+    const mountTimer = setTimeout(() => {
+      setVideoMounted(true);
+    }, 150);
+
+    return () => clearTimeout(mountTimer);
+  }, []);
+
+  React.useEffect(() => {
+    if (!videoMounted) return;
     const video = videoRef.current;
     if (!video) return;
 
@@ -47,12 +58,12 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
     let isDisposed = false;
 
-    // Stagger video start by 120ms to allow browser to complete initial paint smoothly
+    // Stagger video start by 80ms to keep main thread completely unblocked
     const startTimer = setTimeout(() => {
       if (!isDisposed && video.paused) {
         video.play().catch(() => {});
       }
-    }, 120);
+    }, 80);
 
     // Efficient IntersectionObserver: Pause video when scrolled out of view to save 100% GPU
     let observer: IntersectionObserver | null = null;
@@ -107,7 +118,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
       window.removeEventListener('touchstart', handleUserInteraction);
       if (observer) observer.disconnect();
     };
-  }, []);
+  }, [videoMounted]);
 
   const featuredProjects = PROJECTS.slice(0, 4);
 
@@ -119,29 +130,38 @@ export const HomeView: React.FC<HomeViewProps> = ({
         className="relative bg-zinc-950 text-white min-h-[520px] sm:min-h-[640px] lg:min-h-[740px] flex items-center justify-center text-center overflow-hidden"
       >
         <div className="absolute inset-0 z-0 overflow-hidden">
-          {/* High-res background image always underneath so there are never blank frames */}
-          <img
-            alt="Heavy excavators performing earthwork"
-            className="absolute inset-0 w-full h-full object-cover opacity-90 pointer-events-none"
-            src={ASSETS.heroBg}
-            loading="eager"
-            fetchPriority="high"
-            decoding="async"
-            referrerPolicy="no-referrer"
-          />
+          {/* Responsive High-res background image always underneath so there are never blank frames */}
+          <picture className="absolute inset-0 w-full h-full pointer-events-none">
+            <source media="(max-width: 767px)" srcSet={ASSETS.heroBgMobile} type="image/webp" />
+            <source media="(min-width: 768px)" srcSet={ASSETS.heroBg} type="image/webp" />
+            <img
+              alt="Heavy excavators performing earthwork"
+              className="w-full h-full object-cover opacity-90"
+              src={ASSETS.heroBg}
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
+              width="1376"
+              height="768"
+              referrerPolicy="no-referrer"
+            />
+          </picture>
           {/* Full-width cinematic background video with hardware acceleration and no CSS filter overhead */}
-          <video
-            ref={videoRef}
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="metadata"
-            poster={ASSETS.heroBg}
-            className="absolute inset-0 w-full h-full object-cover opacity-90 motion-reduce:hidden pointer-events-none"
-          >
-            <source src={ASSETS.heroVideo} type="video/mp4" />
-          </video>
+          {videoMounted && (
+            <video
+              ref={videoRef}
+              autoPlay
+              loop
+              muted
+              playsInline
+              preload="metadata"
+              poster={ASSETS.heroBgMobile}
+              className="absolute inset-0 w-full h-full object-cover opacity-90 motion-reduce:hidden pointer-events-none"
+            >
+              <source src={ASSETS.heroVideoMobile} media="(max-width: 767px)" type="video/mp4" />
+              <source src={ASSETS.heroVideo} type="video/mp4" />
+            </video>
+          )}
           {/* Light gradient scrim for optimal text contrast without masking the action */}
           <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/80 via-black/15 to-black/25 pointer-events-none"></div>
         </div>
@@ -221,6 +241,8 @@ export const HomeView: React.FC<HomeViewProps> = ({
               <img
                 src={ASSETS.bbbBadge}
                 alt="BBB Accredited Business"
+                width="57"
+                height="32"
                 className="h-8 w-auto object-contain"
                 loading="lazy"
                 decoding="async"
@@ -249,6 +271,8 @@ export const HomeView: React.FC<HomeViewProps> = ({
               <img
                 src={ASSETS.bbbBadge}
                 alt="BBB Accredited Business"
+                width="57"
+                height="32"
                 className="h-8 w-auto object-contain"
                 loading="lazy"
                 decoding="async"
@@ -282,6 +306,8 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 <div className="h-48 sm:h-56 overflow-hidden bg-zinc-100 relative">
                   <img
                     alt={service.title}
+                    width="384"
+                    height="224"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     src={service.image}
                     loading="lazy"
@@ -320,6 +346,8 @@ export const HomeView: React.FC<HomeViewProps> = ({
             <div className="overflow-hidden shadow-2xl border border-zinc-700">
               <img
                 alt="Vision Excavation heavy machinery and site development"
+                width="576"
+                height="384"
                 className="w-full h-full object-cover"
                 src={ASSETS.precisionCallout}
                 loading="lazy"
@@ -447,6 +475,8 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 <div className="h-72 sm:h-80 overflow-hidden relative bg-zinc-900">
                   <img
                     alt={project.title}
+                    width="576"
+                    height="320"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     src={project.image}
                     loading="lazy"
@@ -559,6 +589,8 @@ export const HomeView: React.FC<HomeViewProps> = ({
             <div className="relative overflow-hidden aspect-[9/14] bg-zinc-900 border border-zinc-800 shadow-xl group">
               <img
                 alt="Excavator grading rocky terrain"
+                width="400"
+                height="622"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 src={ASSETS.action1}
                 loading="lazy"
@@ -578,6 +610,8 @@ export const HomeView: React.FC<HomeViewProps> = ({
             <div className="relative overflow-hidden aspect-[9/14] bg-zinc-900 border border-zinc-800 shadow-xl group">
               <img
                 alt="Vision Excavation crew positioning armor stone"
+                width="400"
+                height="622"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 src={ASSETS.action2}
                 loading="lazy"

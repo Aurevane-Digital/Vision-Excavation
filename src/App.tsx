@@ -3,14 +3,15 @@ import { PageView, ProjectItem } from './types';
 import { TopNotificationBar } from './components/TopNotificationBar';
 import { MainHeader } from './components/MainHeader';
 import { MainFooter } from './components/MainFooter';
-import { QuoteModal } from './components/QuoteModal';
-import { ProjectModal } from './components/ProjectModal';
 import { HomeView } from './views/HomeView';
-import { AboutView } from './views/AboutView';
-import { ServicesView } from './views/ServicesView';
-import { OurWorkView } from './views/OurWorkView';
-import { ContactView } from './views/ContactView';
 import { SpeedInsights } from '@vercel/speed-insights/next';
+
+const AboutView = React.lazy(() => import('./views/AboutView').then(m => ({ default: m.AboutView })));
+const ServicesView = React.lazy(() => import('./views/ServicesView').then(m => ({ default: m.ServicesView })));
+const OurWorkView = React.lazy(() => import('./views/OurWorkView').then(m => ({ default: m.OurWorkView })));
+const ContactView = React.lazy(() => import('./views/ContactView').then(m => ({ default: m.ContactView })));
+const QuoteModal = React.lazy(() => import('./components/QuoteModal').then(m => ({ default: m.QuoteModal })));
+const ProjectModal = React.lazy(() => import('./components/ProjectModal').then(m => ({ default: m.ProjectModal })));
 
 export default function App() {
   const [currentView, setCurrentView] = useState<PageView>('home');
@@ -68,57 +69,63 @@ export default function App() {
           />
         )}
 
-        {currentView === 'about' && (
-          <AboutView
-            onNavigate={handleNavigate}
-            onRequestQuote={() => handleOpenQuoteModal()}
-          />
-        )}
+        <React.Suspense fallback={<div className="min-h-[600px] bg-white flex items-center justify-center"><div className="w-8 h-8 border-3 border-zinc-200 border-t-[#E31B23] rounded-full animate-spin"></div></div>}>
+          {currentView === 'about' && (
+            <AboutView
+              onNavigate={handleNavigate}
+              onRequestQuote={() => handleOpenQuoteModal()}
+            />
+          )}
 
-        {currentView === 'services' && (
-          <ServicesView
-            onNavigate={handleNavigate}
-            onRequestQuote={handleOpenQuoteModal}
-            onApplyEstimate={handleApplyEstimate}
-          />
-        )}
+          {currentView === 'services' && (
+            <ServicesView
+              onNavigate={handleNavigate}
+              onRequestQuote={handleOpenQuoteModal}
+              onApplyEstimate={handleApplyEstimate}
+            />
+          )}
 
-        {currentView === 'our-work' && (
-          <OurWorkView
-            onNavigate={handleNavigate}
-            onRequestQuote={() => handleOpenQuoteModal()}
-            onSelectProject={setSelectedProject}
-          />
-        )}
+          {currentView === 'our-work' && (
+            <OurWorkView
+              onNavigate={handleNavigate}
+              onRequestQuote={() => handleOpenQuoteModal()}
+              onSelectProject={setSelectedProject}
+            />
+          )}
 
-        {currentView === 'contact' && (
-          <ContactView
-            prefilledService={prefilledService}
-            prefilledMessage={prefilledMessage}
-          />
-        )}
+          {currentView === 'contact' && (
+            <ContactView
+              prefilledService={prefilledService}
+              prefilledMessage={prefilledMessage}
+            />
+          )}
+
+          {/* Global Modals */}
+          {isQuoteModalOpen && (
+            <QuoteModal
+              isOpen={isQuoteModalOpen}
+              initialService={prefilledService}
+              onClose={() => setIsQuoteModalOpen(false)}
+            />
+          )}
+
+          {selectedProject && (
+            <ProjectModal
+              project={selectedProject}
+              onClose={() => setSelectedProject(null)}
+              onRequestQuote={(serviceCategory) => {
+                setSelectedProject(null);
+                handleOpenQuoteModal(serviceCategory);
+              }}
+            />
+          )}
+        </React.Suspense>
       </main>
 
       {/* Main Footer */}
       <MainFooter
         onNavigate={handleNavigate}
         onSelectService={handleSelectServiceFromFooter}
-      />
-
-      {/* Global Modals */}
-      <QuoteModal
-        isOpen={isQuoteModalOpen}
-        initialService={prefilledService}
-        onClose={() => setIsQuoteModalOpen(false)}
-      />
-
-      <ProjectModal
-        project={selectedProject}
-        onClose={() => setSelectedProject(null)}
-        onRequestQuote={(serviceCategory) => {
-          setSelectedProject(null);
-          handleOpenQuoteModal(serviceCategory);
-        }}
       />
 
       {/* Vercel Speed Insights */}

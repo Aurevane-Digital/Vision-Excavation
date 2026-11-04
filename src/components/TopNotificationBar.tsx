@@ -25,7 +25,10 @@ export const TopNotificationBar: React.FC = () => {
             <img
               src={ASSETS.bbbBadge}
               alt="BBB Accredited Business"
+              width="48"
+              height="24"
               className="h-5 sm:h-6 w-auto object-contain"
+              decoding="async"
               referrerPolicy="no-referrer"
             />
           </div>

@@ -65,6 +65,9 @@ export const MainHeader: React.FC<MainHeaderProps> = ({
               <img
                 src={ASSETS.logo}
                 alt="Vision Excavation"
+                width="160"
+                height="44"
+                decoding="async"
                 className={`h-8 sm:h-11 max-h-12 w-auto object-contain hover:opacity-90 transition-all duration-300 ${
                   !isScrolled && !mobileMenuOpen
                     ? 'drop-shadow-[0_0_8px_rgba(255,255,255,0.7)] drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] filter'

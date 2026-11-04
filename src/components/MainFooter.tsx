@@ -32,6 +32,10 @@ export const MainFooter: React.FC<MainFooterProps> = ({ onNavigate, onSelectServ
                 <img
                   src={ASSETS.footerLogo}
                   alt="Vision Excavation"
+                  width="160"
+                  height="44"
+                  loading="lazy"
+                  decoding="async"
                   className="h-9 sm:h-12 w-auto object-contain"
                   referrerPolicy="no-referrer"
                 />
@@ -53,6 +57,10 @@ export const MainFooter: React.FC<MainFooterProps> = ({ onNavigate, onSelectServ
               <img
                 src={ASSETS.bbbBadgeAlt}
                 alt="BBB Accredited Business"
+                width="96"
+                height="48"
+                loading="lazy"
+                decoding="async"
                 className="h-10 sm:h-12 w-auto object-contain"
                 referrerPolicy="no-referrer"
               />
